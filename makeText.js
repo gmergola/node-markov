@@ -4,6 +4,7 @@ const markov = require('./markov');
 const fs = require('fs');
 const axios = require('axios');
 const process = require('process');
+const stripHtml = require('string-strip-html');
 
 // Generates the markov chain
 function generateMarkov(text){
@@ -12,6 +13,7 @@ function generateMarkov(text){
 }
 
 // reads the file or throws an error id not found
+// calls function to make markov chain of the text inside the file
 function readFile(file){
   fs.readFile(file, "utf8", function(error, data){
     if (error){
@@ -23,6 +25,7 @@ function readFile(file){
 }
 
 // makes an axios call to the url or throws an error if not found
+// calls function to make markov chain on the stripped html
 async function readUrl(url){
   let response;
   try{
@@ -31,7 +34,7 @@ async function readUrl(url){
     console.error(`Cannot read URL: ${url}: ${err}`);
     process.exit(1);
   }
-  generateMarkov(response.data)
+  generateMarkov(stripHtml(response.data))
 }
 
 
